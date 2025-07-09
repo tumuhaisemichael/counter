@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trail Event Countdown</title>
+    <title>Shared Trail Event Countdown</title>
+    <!-- Add Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
         :root {
             --primary-color: #1a2a3a;
@@ -95,6 +98,12 @@
             margin-top: 2rem;
         }
         
+        .admin-controls {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
         .buttons {
             display: flex;
             gap: 1rem;
@@ -145,6 +154,24 @@
             color: var(--accent-color);
         }
         
+        .connection-status {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        
+        .connected {
+            color: #2ecc71;
+        }
+        
+        .disconnected {
+            color: #e74c3c;
+        }
+        
         @media (max-width: 768px) {
             .timer-container {
                 flex-wrap: wrap;
@@ -183,7 +210,7 @@
     <div class="container">
         <div class="event-header">
             <div class="event-title">Trail Event</div>
-            <div class="event-subtitle">Countdown to the adventure</div>
+            <div class="event-subtitle">Synchronized Countdown</div>
         </div>
         
         <div class="timer-container">
@@ -205,7 +232,7 @@
             </div>
         </div>
         
-        <div class="controls">
+        <div class="controls" id="admin-controls">
             <div class="buttons">
                 <button id="start-btn">Begin Countdown</button>
                 <button id="reset-btn">Reset Event</button>
@@ -213,11 +240,30 @@
         </div>
         
         <div class="event-status" id="event-status">
-            Countdown not yet started
+            Waiting for countdown to start...
         </div>
+    </div>
+    
+    <div class="connection-status" id="connection-status">
+        Connecting...
     </div>
 
     <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDummyKeyDontUseThis1",
+            authDomain: "trail-event-countdown.firebaseapp.com",
+            databaseURL: "https://trail-event-countdown.firebaseio.com",
+            projectId: "trail-event-countdown",
+            storageBucket: "trail-event-countdown.appspot.com",
+            messagingSenderId: "1234567890",
+            appId: "1:1234567890:web:abcdef1234567890"
+        };
+        
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        
         // DOM Elements
         const daysDisplay = document.getElementById('days');
         const hoursDisplay = document.getElementById('hours');
@@ -226,15 +272,27 @@
         const startBtn = document.getElementById('start-btn');
         const resetBtn = document.getElementById('reset-btn');
         const eventStatus = document.getElementById('event-status');
+        const connectionStatus = document.getElementById('connection-status');
+        const adminControls = document.getElementById('admin-controls');
         
         // Constants
         const DEFAULT_DURATION = 7 * 24 * 60 * 60; // 7 days in seconds
-        const STORAGE_KEY = 'trailEventCountdown';
         
         // Variables
         let countdownInterval;
         let endTime = 0;
         let isRunning = false;
+        let isAdmin = false;
+        
+        // Check URL for admin parameter
+        function checkAdmin() {
+            const urlParams = new URLSearchParams(window.location.search);
+            isAdmin = urlParams.has('admin');
+            
+            if (!isAdmin) {
+                adminControls.style.display = 'none';
+            }
+        }
         
         // Format number to 2 digits
         function formatNumber(num) {
@@ -270,96 +328,109 @@
                 });
                 eventStatus.textContent = 'Event has started!';
                 eventStatus.style.color = 'var(--highlight-color)';
+                clearInterval(countdownInterval);
             }
         }
         
-        // Start countdown
-        function startCountdown() {
-            if (isRunning) return;
+        // Start local countdown
+        function startLocalCountdown(endTimestamp) {
+            clearInterval(countdownInterval);
+            endTime = endTimestamp;
             
-            // Set end time (now + duration)
+            countdownInterval = setInterval(() => {
+                const now = Math.floor(Date.now() / 1000);
+                const remaining = endTime - now;
+                
+                if (remaining <= 0) {
+                    updateDisplay(0);
+                    clearInterval(countdownInterval);
+                    return;
+                }
+                
+                updateDisplay(remaining);
+            }, 1000);
+            
+            // Immediate update
+            const now = Math.floor(Date.now() / 1000);
+            updateDisplay(endTime - now);
+        }
+        
+        // Start countdown (admin only)
+        function startCountdown() {
+            if (!isAdmin) return;
+            
             const now = Math.floor(Date.now() / 1000);
             endTime = now + DEFAULT_DURATION;
             
-            // Save to localStorage
-            localStorage.setItem(STORAGE_KEY, JSON.stringify({
-                endTime,
-                started: true
-            }));
+            // Save to Firebase
+            database.ref('countdown').set({
+                endTime: endTime,
+                startedAt: now,
+                status: 'running'
+            });
             
-            isRunning = true;
-            startBtn.textContent = 'Countdown Running...';
-            startBtn.disabled = true;
-            eventStatus.textContent = 'Countdown in progress';
+            eventStatus.textContent = 'Countdown started!';
             eventStatus.style.color = 'var(--trail-color)';
-            
-            // Start the interval
-            countdownInterval = setInterval(updateCountdown, 1000);
-            updateCountdown();
+            startBtn.disabled = true;
         }
         
-        // Update countdown
-        function updateCountdown() {
-            const now = Math.floor(Date.now() / 1000);
-            const remaining = endTime - now;
-            
-            if (remaining <= 0) {
-                clearInterval(countdownInterval);
-                updateDisplay(0);
-                isRunning = false;
-                return;
-            }
-            
-            updateDisplay(remaining);
-        }
-        
-        // Reset countdown
+        // Reset countdown (admin only)
         function resetCountdown() {
-            clearInterval(countdownInterval);
-            localStorage.removeItem(STORAGE_KEY);
+            if (!isAdmin) return;
             
-            endTime = 0;
-            isRunning = false;
+            clearInterval(countdownInterval);
+            
+            // Update Firebase
+            database.ref('countdown').set({
+                endTime: 0,
+                startedAt: 0,
+                status: 'reset'
+            });
             
             updateDisplay(DEFAULT_DURATION);
             document.querySelectorAll('.time-value').forEach(el => {
                 el.style.color = 'var(--text-color)';
             });
             
-            startBtn.textContent = 'Begin Countdown';
-            startBtn.disabled = false;
             eventStatus.textContent = 'Countdown reset';
             eventStatus.style.color = 'var(--accent-color)';
+            startBtn.disabled = false;
         }
         
-        // Load saved state
-        function loadState() {
-            const saved = localStorage.getItem(STORAGE_KEY);
-            if (!saved) return;
+        // Initialize Firebase listeners
+        function initFirebase() {
+            // Connection state
+            firebase.database().ref('.info/connected').on('value', (snapshot) => {
+                if (snapshot.val()) {
+                    connectionStatus.textContent = 'Connected';
+                    connectionStatus.className = 'connection-status connected';
+                } else {
+                    connectionStatus.textContent = 'Disconnected';
+                    connectionStatus.className = 'connection-status disconnected';
+                }
+            });
             
-            const data = JSON.parse(saved);
-            if (!data.started) return;
-            
-            endTime = data.endTime;
-            const now = Math.floor(Date.now() / 1000);
-            const remaining = endTime - now;
-            
-            if (remaining > 0) {
-                // Countdown was running
-                isRunning = true;
-                startBtn.textContent = 'Countdown Running...';
-                startBtn.disabled = true;
-                eventStatus.textContent = 'Countdown in progress';
-                eventStatus.style.color = 'var(--trail-color)';
+            // Countdown data
+            database.ref('countdown').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (!data) return;
                 
-                countdownInterval = setInterval(updateCountdown, 1000);
-                updateCountdown();
-            } else {
-                // Countdown has finished
-                updateDisplay(0);
-                eventStatus.textContent = 'Event has started!';
-                eventStatus.style.color = 'var(--highlight-color)';
-            }
+                if (data.status === 'running' && data.endTime > 0) {
+                    startLocalCountdown(data.endTime);
+                    eventStatus.textContent = 'Countdown in progress';
+                    eventStatus.style.color = 'var(--trail-color)';
+                    startBtn.disabled = true;
+                } else if (data.status === 'reset') {
+                    clearInterval(countdownInterval);
+                    updateDisplay(DEFAULT_DURATION);
+                    document.querySelectorAll('.time-value').forEach(el => {
+                        el.style.color = 'var(--text-color)';
+                    });
+                    eventStatus.textContent = 'Countdown ready';
+                    eventStatus.style.color = 'var(--accent-color)';
+                    startBtn.disabled = false;
+                }
+            });
         }
         
         // Event listeners
@@ -367,8 +438,9 @@
         resetBtn.addEventListener('click', resetCountdown);
         
         // Initialize
+        checkAdmin();
+        initFirebase();
         updateDisplay(DEFAULT_DURATION);
-        loadState();
     </script>
 </body>
 </html>
