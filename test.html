@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>SMACK PTA AGM Countdown</title>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     body {
       font-family: sans-serif;
@@ -69,7 +68,7 @@
       transition: background 0.3s;
     }
 
-    #start-btn:hover {
+    #start-btn:hover:not(:disabled) {
       background: #0ea5e9;
     }
 
@@ -102,13 +101,12 @@
       margin-right: 5px;
     }
 
-    .offline-indicator {
-      display: inline-block;
-      width: 10px;
-      height: 10px;
-      background: #ef4444;
-      border-radius: 50%;
-      margin-right: 5px;
+    .error-message {
+      color: #ef4444;
+      margin-top: 10px;
+      padding: 10px;
+      background: #1e293b;
+      border-radius: 5px;
     }
   </style>
 </head>
@@ -117,7 +115,7 @@
   <h1>SMACK PTA AGM Countdown</h1>
   <p>Join us on <strong>July 20, 2025 @ 9:00 AM</strong> at SMACK Campus, Kisubi</p>
 
-  <!-- Placeholder for event image -->
+  <!-- Replace with your actual image -->
   <div class="event-image">
     SMACK PTA AGM Event Poster
   </div>
@@ -132,136 +130,129 @@
   <button id="start-btn">Start Countdown</button>
   
   <div id="status" class="status-message">
-    <span id="connection-status">Connecting...</span>
+    <span class="online-indicator"></span>
+    <span id="connection-status">Connected to Supabase</span>
   </div>
 
-  <script>
-    // Firebase configuration - You'll need to replace this with your own
-    const firebaseConfig = {
-      apiKey: "demo-key",
-      authDomain: "smack-countdown-demo.firebaseapp.com",
-      databaseURL: "https://smack-countdown-demo-default-rtdb.firebaseio.com/",
-      projectId: "smack-countdown-demo",
-      storageBucket: "smack-countdown-demo.appspot.com",
-      messagingSenderId: "123456789",
-      appId: "1:123456789:web:demo"
-    };
+  <div id="error-container"></div>
 
-    // For demo purposes, we'll use a simulated Firebase-like behavior
-    // In production, you'd use the real Firebase config above
-    
+  <script>
+    // Initialize Supabase client
+    const { createClient } = supabase;
+    const supabaseClient = createClient(
+      "https://nkvxalwhxydsrbyocuhw.supabase.co", 
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5rdnhhbHdoeHlkc3JieW9jdWh3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE0MzU2MDgsImV4cCI6MjA2NzAxMTYwOH0.VsShyYs46BirbRgZCe4afSrke6Oe1deCXoJ6Xc5oKQI"
+    );
+
     const TARGET_DATE = new Date("2025-07-20T09:00:00").getTime();
     const startBtn = document.getElementById("start-btn");
-    const statusEl = document.getElementById("status");
-    const connectionStatusEl = document.getElementById("connection-status");
-    
+    const statusEl = document.getElementById("connection-status");
+    const errorContainer = document.getElementById("error-container");
+
     let countdownInterval = null;
-    let syncInterval = null;
-    let isConnected = false;
-    let startTime = null;
+    let hasStarted = false;
 
-    // Simulated Firebase-like database
-    class SyncedCountdown {
-      constructor() {
-        this.listeners = [];
-        this.data = { started: false, startTime: null };
-        this.connect();
-      }
+    // Show error message
+    function showError(message) {
+      errorContainer.innerHTML = `<div class="error-message">Error: ${message}</div>`;
+    }
 
-      connect() {
-        // Simulate connection
-        setTimeout(() => {
-          this.isConnected = true;
-          this.updateConnectionStatus(true);
-          this.loadFromStorage();
-          this.startSync();
-        }, 1000);
-      }
+    // Clear error message
+    function clearError() {
+      errorContainer.innerHTML = "";
+    }
 
-      updateConnectionStatus(connected) {
-        isConnected = connected;
-        if (connected) {
-          connectionStatusEl.innerHTML = '<span class="online-indicator"></span>Connected - Countdown synchronized';
+    // Check if countdown is already started
+    async function checkStartStatus() {
+      try {
+        clearError();
+        statusEl.textContent = "Checking countdown status...";
+        
+        const { data, error } = await supabaseClient
+          .from("countdown_status")
+          .select("*")
+          .limit(1);
+
+        if (error) {
+          console.error("Error checking status:", error);
+          showError(`Database error: ${error.message}`);
+          return;
+        }
+
+        if (data && data.length > 0 && data[0].started) {
+          hasStarted = true;
+          startBtn.disabled = true;
+          startBtn.textContent = "Countdown Running...";
+          statusEl.textContent = "Countdown synchronized and running";
+          startCountdown();
         } else {
-          connectionStatusEl.innerHTML = '<span class="offline-indicator"></span>Offline - Using local time';
+          statusEl.textContent = "Ready to start countdown";
         }
-      }
-
-      loadFromStorage() {
-        const saved = localStorage.getItem('smack_countdown_sync');
-        if (saved) {
-          this.data = JSON.parse(saved);
-          this.notifyListeners();
-        }
-      }
-
-      saveToStorage() {
-        localStorage.setItem('smack_countdown_sync', JSON.stringify(this.data));
-      }
-
-      startSync() {
-        // Simulate real-time sync every 5 seconds
-        syncInterval = setInterval(() => {
-          if (this.data.started && this.data.startTime) {
-            // In a real Firebase setup, this would sync with the server
-            this.notifyListeners();
-          }
-        }, 5000);
-      }
-
-      on(callback) {
-        this.listeners.push(callback);
-      }
-
-      set(path, value) {
-        if (path === 'started') {
-          this.data.started = value;
-          if (value) {
-            this.data.startTime = Date.now();
-          }
-        }
-        this.saveToStorage();
-        this.notifyListeners();
-        return Promise.resolve();
-      }
-
-      notifyListeners() {
-        this.listeners.forEach(callback => callback(this.data));
+      } catch (err) {
+        console.error("Error in checkStartStatus:", err);
+        showError(`Connection error: ${err.message}`);
       }
     }
 
-    const db = new SyncedCountdown();
-
-    // Listen for countdown state changes
-    db.on((data) => {
-      if (data.started && data.startTime) {
-        startTime = data.startTime;
-        startBtn.disabled = true;
-        startBtn.textContent = "Countdown Running...";
-        startCountdown();
-      }
-    });
-
-    function handleStart() {
-      if (!isConnected) {
-        alert("Please wait for connection to establish before starting the countdown.");
+    // Start the countdown
+    async function handleStart() {
+      if (hasStarted) {
+        alert("Countdown is already running!");
         return;
       }
 
-      startBtn.disabled = true;
-      startBtn.textContent = "Starting...";
-      
-      db.set('started', true).then(() => {
-        console.log("Countdown started and synchronized!");
-      }).catch((error) => {
+      try {
+        clearError();
+        startBtn.disabled = true;
+        startBtn.textContent = "Starting...";
+        statusEl.textContent = "Starting countdown...";
+
+        // First, check if there's already a record
+        const { data: existingData, error: selectError } = await supabaseClient
+          .from("countdown_status")
+          .select("*")
+          .limit(1);
+
+        if (selectError) {
+          throw selectError;
+        }
+
+        let result;
+        if (existingData && existingData.length > 0) {
+          // Update existing record
+          result = await supabaseClient
+            .from("countdown_status")
+            .update({ started: true })
+            .eq("id", existingData[0].id)
+            .select();
+        } else {
+          // Insert new record
+          result = await supabaseClient
+            .from("countdown_status")
+            .insert([{ started: true }])
+            .select();
+        }
+
+        if (result.error) {
+          throw result.error;
+        }
+
+        hasStarted = true;
+        startBtn.textContent = "Countdown Running...";
+        statusEl.textContent = "Countdown synchronized and running";
+        startCountdown();
+
+      } catch (error) {
         console.error("Error starting countdown:", error);
+        showError(`Failed to start countdown: ${error.message}`);
         startBtn.disabled = false;
         startBtn.textContent = "Start Countdown";
-      });
+        statusEl.textContent = "Error - Try again";
+      }
     }
 
+    // Real-time countdown function
     function startCountdown() {
-      // Clear any existing interval
       if (countdownInterval) {
         clearInterval(countdownInterval);
       }
@@ -288,24 +279,53 @@
       }, 1000);
     }
 
-    // Initialize on page load
-    window.addEventListener('load', () => {
+    // Set up real-time subscription for synchronization
+    function setupRealtimeSync() {
+      const subscription = supabaseClient
+        .channel('countdown_changes')
+        .on('postgres_changes', {
+          event: '*',
+          schema: 'public',
+          table: 'countdown_status'
+        }, (payload) => {
+          console.log('Real-time update received:', payload);
+          if (payload.new && payload.new.started && !hasStarted) {
+            hasStarted = true;
+            startBtn.disabled = true;
+            startBtn.textContent = "Countdown Running...";
+            statusEl.textContent = "Countdown synchronized and running";
+            startCountdown();
+          }
+        })
+        .subscribe();
+
+      return subscription;
+    }
+
+    // Initialize everything when page loads
+    window.addEventListener('load', async () => {
       startBtn.addEventListener("click", handleStart);
+      
+      // Check initial status
+      await checkStartStatus();
+      
+      // Set up real-time synchronization
+      setupRealtimeSync();
     });
 
     // Clean up on page unload
     window.addEventListener('beforeunload', () => {
-      if (countdownInterval) clearInterval(countdownInterval);
-      if (syncInterval) clearInterval(syncInterval);
+      if (countdownInterval) {
+        clearInterval(countdownInterval);
+      }
     });
   </script>
 
   <div style="margin-top: 40px; font-size: 12px; color: #64748b;">
-    <p><strong>Setup Instructions:</strong></p>
-    <p>1. Create a Firebase project at <a href="https://console.firebase.google.com" target="_blank" style="color: #38bdf8;">Firebase Console</a></p>
-    <p>2. Enable Realtime Database</p>
-    <p>3. Replace the demo firebaseConfig with your actual Firebase config</p>
-    <p>4. Set database rules to allow read/write access</p>
+    <p><strong>Current Database Setup:</strong></p>
+    <p>Your Supabase table "countdown_status" needs at least these columns:</p>
+    <p>• id (primary key) • started (boolean)</p>
+    <p>The countdown synchronizes based on when someone clicks "Start" - everyone sees the same time remaining until July 20, 2025 @ 9:00 AM</p>
   </div>
 
 </body>
