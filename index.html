@@ -2,38 +2,68 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SMACK PTA AGM & Elections - Live Countdown</title>
-    <meta name="description" content="SMACK PTA AGM & Elections - July 20, 2025">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>SMACK PTA AGM & Elections - Live Countdown | July 20, 2025</title>
+    <meta name="description" content="Join us for SMACK PTA AGM & Elections on July 20, 2025 at 9:00 AM. SMACK Campus, Kisubi. #ComeInNumbers">
+    <meta name="keywords" content="SMACK, PTA, AGM, Elections, St Mary's College Kisubi, SMACKOBA">
+    <meta name="author" content="SMACKOBA">
     
-    <style>
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="SMACK PTA AGM & Elections - July 20, 2025">
+    <meta property="og:description" content="Join us for SMACK PTA AGM & Elections. Starting with Mass at 9:00 AM">
+    <meta property="og:image" content="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/smak.jpg-PKNU0LOwKmlC9PwevOjCwvkoA44mKj.jpeg">
+    <meta property="og:type" content="event">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦅</text></svg>">
+    
+<style>
+        /* CSS Reset and Base Styles */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        html {
+            height: 100%;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: #1a1a2e;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
             overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
+        /* Main Container */
         .poster-container {
             position: relative;
-            width: min(90vw, 600px);
-            height: min(90vh, 800px);
-            background: url('https://hebbkx1anhila5yf.public.blob.vercel-storage.com/smak.jpg-iDSTg959o1zYY9JRb8ApTBPVNZc1Xw.jpeg') no-repeat center center;
+            width: min(95vw, 650px);
+            height: min(95vh, 850px);
+            background: url('https://hebbkx1anhila5yf.public.blob.vercel-storage.com/smak.jpg-PKNU0LOwKmlC9PwevOjCwvkoA44mKj.jpeg') no-repeat center center;
             background-size: cover;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            border-radius: clamp(15px, 3vw, 25px);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.6),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
             overflow: hidden;
+            transform: scale(1);
+            transition: transform 0.3s ease;
         }
 
+        .poster-container:hover {
+            transform: scale(1.02);
+        }
+
+        /* Countdown Overlay */
         .countdown-overlay {
             position: absolute;
             top: 0;
@@ -41,337 +71,448 @@
             right: 0;
             bottom: 0;
             pointer-events: none;
+            margin-bottom: 150px;
+            margin-left: 300px;
+            transform: scale(0.8);
         }
 
-        /* Top corners - empty areas */
-        .top-left-corner {
+        /* Countdown positioned on the white line after SMACK */
+        .countdown-line {
             position: absolute;
-            top: 8%;
-            left: 5%;
-            z-index: 10;
-        }
-
-        .top-right-corner {
-            position: absolute;
-            top: 8%;
-            right: 5%;
-            z-index: 10;
-        }
-
-        /* Side margins - empty gradient areas */
-        .left-margin {
-            position: absolute;
-            left: 2%;
-            top: 45%;
-            transform: translateY(-50%);
-            z-index: 10;
-        }
-
-        .right-margin {
-            position: absolute;
-            right: 2%;
-            top: 45%;
-            transform: translateY(-50%);
-            z-index: 10;
-        }
-
-        /* Bottom corners - avoiding text areas */
-        .bottom-left-space {
-            position: absolute;
-            bottom: 12%;
-            left: 5%;
-            z-index: 10;
-        }
-
-        .bottom-right-space {
-            position: absolute;
-            bottom: 12%;
-            right: 5%;
-            z-index: 10;
-        }
-
-        /* Empty space above main title */
-        .above-title {
-            position: absolute;
-            top: 25%;
+            top: 37.8%;
             left: 50%;
             transform: translateX(-50%);
-            z-index: 10;
+            display: flex;
+            gap: clamp(6px, 1.8vw, 12px);
+            z-index: 15;
+            justify-content: center;
+            align-items: center;
+            width: clamp(280px, 80%, 450px);
+            padding: 0 clamp(5px, 2vw, 15px);
         }
 
-        /* Empty space below main content */
-        .below-content {
-            position: absolute;
-            bottom: 25%;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 10;
-        }
-
-        /* Countdown unit styles */
+        /* Individual Time Units */
         .time-unit {
-            background: rgba(15, 23, 42, 0.9);
-            backdrop-filter: blur(15px);
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border: 2px solid #ffd700;
-            border-radius: 12px;
-            padding: clamp(6px, 1.5vw, 10px);
+            border-radius: clamp(8px, 2vw, 12px);
+            padding: clamp(6px, 1.5vw, 10px) clamp(4px, 1vw, 8px);
             text-align: center;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
-            transition: all 0.3s ease;
-            min-width: clamp(45px, 10vw, 65px);
+            box-shadow: 
+                0 8px 16px rgba(0, 0, 0, 0.7),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            flex: 1;
+            max-width: clamp(50px, 12vw, 75px);
+            min-width: clamp(40px, 10vw, 60px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .time-unit::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .time-unit:hover::before {
+            left: 100%;
         }
 
         .time-unit:hover {
-            transform: scale(1.05);
-            border-color: #fff;
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6);
+            transform: translateY(-2px) scale(1.05);
+            border-color: #ffffff;
+            box-shadow: 
+                0 12px 24px rgba(0, 0, 0, 0.8),
+                0 0 20px rgba(255, 215, 0, 0.3);
         }
 
+        /* Time Numbers */
         .time-number {
-            font-size: clamp(0.9rem, 2.5vw, 1.4rem);
-            font-weight: bold;
+            font-size: clamp(1rem, 2.8vw, 1.6rem);
+            font-weight: 900;
             color: #ffd700;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            text-shadow: 
+                2px 2px 4px rgba(0, 0, 0, 0.9),
+                0 0 10px rgba(255, 215, 0, 0.3);
             line-height: 1;
             display: block;
+            font-variant-numeric: tabular-nums;
         }
 
+        /* Time Labels */
         .time-label {
-            font-size: clamp(0.4rem, 1vw, 0.6rem);
+            font-size: clamp(0.4rem, 1vw, 0.65rem);
             color: #e2e8f0;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 2px;
+            letter-spacing: clamp(0.5px, 0.1vw, 1px);
+            margin-top: clamp(2px, 0.5vw, 4px);
+            font-weight: 700;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
         }
 
-        /* Larger units for better visibility in corners */
-        .corner-unit {
-            min-width: clamp(55px, 12vw, 75px);
-            padding: clamp(8px, 2vw, 12px);
+        /* Separators */
+        .time-separator {
+            color: #ffd700;
+            font-size: clamp(0.8rem, 2vw, 1.2rem);
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
+            margin: 0 clamp(1px, 0.5vw, 3px);
+            line-height: 1;
+            animation: pulse-separator 2s ease-in-out infinite;
         }
 
-        .corner-unit .time-number {
-            font-size: clamp(1.1rem, 3vw, 1.6rem);
+        @keyframes pulse-separator {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
         }
 
-        .corner-unit .time-label {
-            font-size: clamp(0.5rem, 1.2vw, 0.7rem);
-        }
-
-        /* Floating animations for different positions */
-        .float-1 { animation: float1 3s ease-in-out infinite; }
-        .float-2 { animation: float2 3s ease-in-out infinite 0.5s; }
-        .float-3 { animation: float3 3s ease-in-out infinite 1s; }
-        .float-4 { animation: float4 3s ease-in-out infinite 1.5s; }
+        /* Floating Animations */
+        .float-1 { animation: float1 6s ease-in-out infinite; }
+        .float-2 { animation: float2 6s ease-in-out infinite 1.5s; }
+        .float-3 { animation: float3 6s ease-in-out infinite 3s; }
+        .float-4 { animation: float4 6s ease-in-out infinite 4.5s; }
 
         @keyframes float1 {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-8px) rotate(1deg); }
+            33% { transform: translateY(-3px) rotate(0.5deg); }
+            66% { transform: translateY(1px) rotate(-0.3deg); }
         }
 
         @keyframes float2 {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-6px) rotate(-1deg); }
+            33% { transform: translateY(-2px) rotate(-0.4deg); }
+            66% { transform: translateY(2px) rotate(0.6deg); }
         }
 
         @keyframes float3 {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-10px) rotate(0.5deg); }
+            33% { transform: translateY(-4px) rotate(0.3deg); }
+            66% { transform: translateY(1px) rotate(-0.5deg); }
         }
 
         @keyframes float4 {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-7px) rotate(-0.5deg); }
+            33% { transform: translateY(-1px) rotate(-0.6deg); }
+            66% { transform: translateY(3px) rotate(0.4deg); }
         }
 
-
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.8; transform: scale(1.05); }
+        /* Active State Animation */
+        .time-unit.active {
+            border-color: #ffffff;
+            box-shadow: 
+                0 0 25px rgba(255, 215, 0, 0.6),
+                0 8px 16px rgba(0, 0, 0, 0.7);
+            animation: glow-pulse 0.6s ease-out;
         }
 
-        /* Event started overlay */
+        @keyframes glow-pulse {
+            0% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(255, 215, 0, 0.8); }
+            100% { box-shadow: 0 0 25px rgba(255, 215, 0, 0.6); }
+        }
+
+        .time-number.updating {
+            animation: number-update 0.4s ease-out;
+        }
+
+        @keyframes number-update {
+            0% { transform: scale(1) rotateX(0deg); color: #ffd700; }
+            50% { transform: scale(1.15) rotateX(90deg); color: #ffffff; }
+            100% { transform: scale(1) rotateX(0deg); color: #ffd700; }
+        }
+
+        /* Event Started Overlay */
         .event-started {
             display: none;
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(34, 197, 94, 0.95);
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
             color: white;
-            padding: clamp(15px, 4vw, 30px);
-            border-radius: 20px;
+            padding: clamp(20px, 5vw, 40px);
+            border-radius: clamp(15px, 3vw, 25px);
             text-align: center;
-            font-size: clamp(1rem, 3vw, 1.8rem);
-            font-weight: bold;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-            animation: celebration 2s infinite;
-            z-index: 20;
+            font-size: clamp(1.2rem, 4vw, 2.2rem);
+            font-weight: 900;
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.6),
+                0 0 0 3px rgba(255, 255, 255, 0.2);
+            animation: celebration 3s ease-in-out infinite;
+            z-index: 30;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
         @keyframes celebration {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); }
-            50% { transform: translate(-50%, -50%) scale(1.05); }
+            0%, 100% { 
+                transform: translate(-50%, -50%) scale(1) rotate(0deg); 
+                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), 0 0 0 3px rgba(255, 255, 255, 0.2);
+            }
+            25% { 
+                transform: translate(-50%, -50%) scale(1.05) rotate(1deg); 
+                box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), 0 0 0 5px rgba(255, 255, 255, 0.3);
+            }
+            50% { 
+                transform: translate(-50%, -50%) scale(1.1) rotate(0deg); 
+                box-shadow: 0 35px 70px rgba(0, 0, 0, 0.8), 0 0 0 7px rgba(255, 255, 255, 0.4);
+            }
+            75% { 
+                transform: translate(-50%, -50%) scale(1.05) rotate(-1deg); 
+                box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), 0 0 0 5px rgba(255, 255, 255, 0.3);
+            }
         }
 
-        /* Mobile layout - bottom safe area */
-        .mobile-countdown {
-            display: none;
+        /* Loading Animation */
+        .loading {
             position: absolute;
-            bottom: 5%;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
-            gap: clamp(8px, 2vw, 12px);
-            z-index: 10;
+            transform: translate(-50%, -50%);
+            color: #ffd700;
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            font-weight: bold;
+            z-index: 20;
         }
 
-        /* Responsive behavior */
-        @media (max-width: 768px) {
-            .top-left-corner, .top-right-corner, 
-            .left-margin, .right-margin,
-            .bottom-left-space, .bottom-right-space,
-            .above-title, .below-content {
+        .loading::after {
+            content: '';
+            animation: loading-dots 1.5s infinite;
+        }
+
+        @keyframes loading-dots {
+            0%, 20% { content: ''; }
+            40% { content: '.'; }
+            60% { content: '..'; }
+            80%, 100% { content: '...'; }
+        }
+
+        /* Responsive Design */
+        
+        /* For all mobile devices */
+        @media screen and (max-width: 768px) {
+            .poster-container {
+                width: min(95vw, 650px);
+                height: min(95vh, 850px);
+                max-width: 100%;
+                max-height: 100%;
+            }
+            
+            .countdown-overlay {
+                margin-bottom: 110px;
+                margin-left: 220px;
+                transform: scale(0.7);
+            }
+            
+            .countdown-line {
+                width: clamp(280px, 80%, 450px);
+                gap: clamp(6px, 1.8vw, 12px);
+                top: 37.8%;
+            }
+            
+            .time-unit {
+                max-width: clamp(50px, 12vw, 75px);
+                min-width: clamp(40px, 10vw, 60px);
+                padding: clamp(6px, 1.5vw, 10px) clamp(4px, 1vw, 8px);
+            }
+            
+            .time-number {
+                font-size: clamp(1rem, 2.8vw, 1.6rem);
+            }
+            
+            .time-label {
+                font-size: clamp(0.4rem, 1vw, 0.65rem);
+            }
+            
+            .time-separator {
+                font-size: clamp(0.8rem, 2vw, 1.2rem);
+            }
+        }
+
+        /* Very small devices (adjustments only when absolutely necessary) */
+        @media screen and (max-width: 360px) {
+            .countdown-overlay {
+                transform: scale(0.6);
+            }
+        }
+
+        /* Landscape orientation */
+        @media screen and (orientation: landscape) and (max-height: 500px) {
+            .poster-container {
+                width: min(90vh, 650px);
+                height: min(95vh, 850px);
+            }
+            
+            .countdown-overlay {
+                transform: scale(0.7);
+            }
+        }
+
+        /* High DPI displays */
+        @media screen and (-webkit-min-device-pixel-ratio: 2), 
+               screen and (min-resolution: 192dpi) {
+            .time-number {
+                text-rendering: optimizeLegibility;
+            }
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            .float-1, .float-2, .float-3, .float-4,
+            .time-unit, .event-started, .time-separator {
+                animation: none !important;
+            }
+            
+            .time-unit {
+                transition: none;
+            }
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: linear-gradient(135deg, #000000 0%, #1a1a2e 50%, #16213e 100%);
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+            }
+            
+            .countdown-overlay {
                 display: none;
             }
-            
-            .mobile-countdown {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-                max-width: 90%;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .poster-container {
-                width: 95vw;
-                height: 95vh;
-            }
-            
-            .mobile-countdown {
-                bottom: 3%;
-                gap: 6px;
-            }
-        }
-
-        /* Glowing effect for active countdown */
-        .time-unit.active {
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-            border-color: #fff;
-        }
-
-        /* Smooth number transitions */
-        .time-number {
-            transition: all 0.3s ease;
-        }
-
-        .time-number.updating {
-            transform: scale(1.15);
-            color: #fff;
-        }
-
-        /* Subtle glow around units */
-        .time-unit::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1), transparent);
-            border-radius: 14px;
-            z-index: -1;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .time-unit:hover::before {
-            opacity: 1;
         }
     </style>
 </head>
 <body>
     <div class="poster-container">
         <div class="countdown-overlay">
-            <!-- Live indicator in safe area -->
+            <!-- Loading indicator -->
+            <div class="loading" id="loading">Loading countdown</div>
             
-            <!-- Top corners - empty gradient areas -->
-            <div class="top-left-corner float-1">
-                <div class="time-unit corner-unit">
+            <!-- Countdown positioned on the white line after SMACK -->
+            <div class="countdown-line" id="countdown-line" style="opacity: 0;">
+                <div class="time-unit float-1">
                     <div class="time-number" id="days">00</div>
                     <div class="time-label">Days</div>
                 </div>
-            </div>
-            
-            <div class="top-right-corner float-2">
-                <div class="time-unit corner-unit">
+                
+                <div class="time-separator">:</div>
+                
+                <div class="time-unit float-2">
                     <div class="time-number" id="hours">00</div>
                     <div class="time-label">Hours</div>
                 </div>
-            </div>
-            
-            <!-- Side margins - empty background areas -->
-            <div class="left-margin float-3">
-                <div class="time-unit">
+                
+                <div class="time-separator">:</div>
+                
+                <div class="time-unit float-3">
                     <div class="time-number" id="minutes">00</div>
                     <div class="time-label">Min</div>
                 </div>
-            </div>
-            
-            <div class="right-margin float-4">
-                <div class="time-unit">
+                
+                <div class="time-separator">:</div>
+                
+                <div class="time-unit float-4">
                     <div class="time-number" id="seconds">00</div>
-                    <div class="time-label">Sec</div>
-                </div>
-            </div>
-            
-            <!-- Bottom corners - avoiding text areas -->
-            <div class="bottom-left-space float-1">
-                <div class="time-unit">
-                    <div class="time-number" id="days-alt">00</div>
-                    <div class="time-label">D</div>
-                </div>
-            </div>
-            
-            <div class="bottom-right-space float-2">
-                <div class="time-unit">
-                    <div class="time-number" id="hours-alt">00</div>
-                    <div class="time-label">H</div>
-                </div>
-            </div>
-            
-            <!-- Mobile countdown in safe bottom area -->
-            <div class="mobile-countdown">
-                <div class="time-unit">
-                    <div class="time-number" id="days-mobile">00</div>
-                    <div class="time-label">Days</div>
-                </div>
-                <div class="time-unit">
-                    <div class="time-number" id="hours-mobile">00</div>
-                    <div class="time-label">Hours</div>
-                </div>
-                <div class="time-unit">
-                    <div class="time-number" id="minutes-mobile">00</div>
-                    <div class="time-label">Min</div>
-                </div>
-                <div class="time-unit">
-                    <div class="time-number" id="seconds-mobile">00</div>
                     <div class="time-label">Sec</div>
                 </div>
             </div>
             
             <!-- Event started overlay -->
             <div class="event-started" id="event-started">
-                🎉 EVENT HAS STARTED! 🎉
+                🎉 EVENT HAS STARTED! 🎉<br>
+                <div style="font-size: 0.7em; margin-top: 10px; opacity: 0.9;">
+                    Welcome to SMACK PTA AGM & Elections
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        const TARGET_DATE = new Date("2025-07-20T09:00:00").getTime();
+        // Configuration
+        const TARGET_DATE = new Date("2025-07-20T09:00:00+03:00").getTime(); // East Africa Time
         let countdownInterval = null;
         let previousValues = { days: -1, hours: -1, minutes: -1, seconds: -1 };
+        let isInitialized = false;
+
+        // Utility functions
+        function padZero(num) {
+            return String(num).padStart(2, "0");
+        }
+
+        function updateElement(id, value, key) {
+            const element = document.getElementById(id);
+            if (!element) return;
+
+            const newValue = padZero(value);
+            
+            if (value !== previousValues[key]) {
+                element.classList.add('updating');
+                element.parentElement.classList.add('active');
+                
+                setTimeout(() => {
+                    element.textContent = newValue;
+                    element.classList.remove('updating');
+                    
+                    setTimeout(() => {
+                        element.parentElement.classList.remove('active');
+                    }, 200);
+                }, 200);
+            } else {
+                element.textContent = newValue;
+            }
+        }
+
+        function updateCountdown() {
+            const now = Date.now();
+            const distance = TARGET_DATE - now;
+
+            // Check if event has started
+            if (distance <= 0) {
+                clearInterval(countdownInterval);
+                document.getElementById('countdown-line').style.display = 'none';
+                document.getElementById("event-started").style.display = "block";
+                
+                // Add confetti effect
+                createConfetti();
+                return;
+            }
+
+            // Calculate time units
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Update display
+            updateElement('days', days, 'days');
+            updateElement('hours', hours, 'hours');
+            updateElement('minutes', minutes, 'minutes');
+            updateElement('seconds', seconds, 'seconds');
+
+            // Store current values
+            previousValues = { days, hours, minutes, seconds };
+
+            // Show countdown if first update
+            if (!isInitialized) {
+                document.getElementById('loading').style.display = 'none';
+                const countdownLine = document.getElementById('countdown-line');
+                countdownLine.style.opacity = '1';
+                countdownLine.style.transition = 'opacity 1s ease-in-out';
+                isInitialized = true;
+            }
+        }
 
         function startCountdown() {
             if (countdownInterval) {
@@ -382,85 +523,94 @@
             countdownInterval = setInterval(updateCountdown, 1000);
         }
 
-        function updateCountdown() {
-            const now = Date.now();
-            const distance = TARGET_DATE - now;
-
-            if (distance <= 0) {
-                clearInterval(countdownInterval);
-                document.querySelector('.countdown-overlay').style.display = 'none';
-                document.getElementById("event-started").style.display = "block";
-                return;
-            }
-
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            const currentValues = { days, hours, minutes, seconds };
-
-            // Update all countdown displays
-            const elements = [
-                { id: 'days', value: days },
-                { id: 'hours', value: hours },
-                { id: 'minutes', value: minutes },
-                { id: 'seconds', value: seconds },
-                { id: 'days-alt', value: days },
-                { id: 'hours-alt', value: hours },
-                { id: 'days-mobile', value: days },
-                { id: 'hours-mobile', value: hours },
-                { id: 'minutes-mobile', value: minutes },
-                { id: 'seconds-mobile', value: seconds }
-            ];
-
-            elements.forEach(({ id, value }) => {
-                const element = document.getElementById(id);
-                if (element) {
-                    const newValue = String(value).padStart(2, "0");
-                    const key = id.replace('-alt', '').replace('-mobile', '');
+        function createConfetti() {
+            // Simple confetti effect
+            const colors = ['#ffd700', '#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4'];
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.style.cssText = `
+                        position: fixed;
+                        width: 10px;
+                        height: 10px;
+                        background: ${colors[Math.floor(Math.random() * colors.length)]};
+                        left: ${Math.random() * 100}vw;
+                        top: -10px;
+                        z-index: 1000;
+                        border-radius: 50%;
+                        pointer-events: none;
+                        animation: confetti-fall 3s linear forwards;
+                    `;
                     
-                    if (value !== previousValues[key]) {
-                        element.classList.add('updating');
-                        element.parentElement.classList.add('active');
-                        
-                        setTimeout(() => {
-                            element.textContent = newValue;
-                            element.classList.remove('updating');
-                            element.parentElement.classList.remove('active');
-                        }, 150);
-                    } else {
-                        element.textContent = newValue;
-                    }
-                }
-            });
-
-            previousValues = currentValues;
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 3000);
+                }, i * 100);
+            }
         }
 
-        // Start countdown when page loads
-        window.addEventListener('load', startCountdown);
+        // Add confetti animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes confetti-fall {
+                to {
+                    transform: translateY(100vh) rotate(360deg);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
 
-        // Handle visibility change
-        document.addEventListener('visibilitychange', function() {
-            if (!document.hidden) {
+        // Event listeners
+        window.addEventListener('load', () => {
+            setTimeout(startCountdown, 500);
+        });
+
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden && isInitialized) {
                 updateCountdown();
             }
         });
 
-        // Add entrance animation
-        window.addEventListener('load', function() {
-            const units = document.querySelectorAll('.time-unit');
-            units.forEach((unit, index) => {
-                unit.style.opacity = '0';
-                unit.style.transform = 'scale(0.8)';
-                setTimeout(() => {
-                    unit.style.transition = 'all 0.6s ease';
-                    unit.style.opacity = '1';
-                    unit.style.transform = 'scale(1)';
-                }, index * 150 + 800);
-            });
+        // Handle page focus
+        window.addEventListener('focus', () => {
+            if (isInitialized) {
+                updateCountdown();
+            }
         });
+
+        // Handle orientation change
+        window.addEventListener('orientationchange', () => {
+            setTimeout(() => {
+                if (isInitialized) {
+                    updateCountdown();
+                }
+            }, 500);
+        });
+
+        // Error handling
+        window.addEventListener('error', (e) => {
+            console.error('Countdown error:', e);
+            document.getElementById('loading').textContent = 'Loading...';
+        });
+
+        // Prevent context menu on mobile
+        document.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+        });
+
+        // Prevent zoom on double tap
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', (e) => {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                e.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
     </script>
 </body>
 </html>
