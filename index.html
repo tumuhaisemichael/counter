@@ -303,14 +303,21 @@
                 height: min(95vh, 750px);
                 max-width: 90%;
                 max-height: 90%;
-                 transform: scale(0.6);
+                overflow: hidden;
+                display: flex;              /* Centers the poster */
+                justify-content: center;
+                align-items: center;
+                box-sizing: border-box;  
 
             }
             
             .countdown-overlay {
                 margin-bottom: 110px;
                 margin-left: 180px;
-                transform: scale(0.7);
+                /* transform: scale(0.7); */
+                font-size: 2rem;         /* This scales the countdown text */
+                font-weight: bold;       /* Optional: adds more emphasis */
+                line-height: 1.4;        /* Optional: improves spacing */
             }
             
             .countdown-line {
