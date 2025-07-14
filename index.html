@@ -297,63 +297,51 @@
         /* Responsive Design */
         
         /* For all mobile devices */
-@media screen and (max-width: 768px) {
-    .poster-container {
-        width: 95vw;
-        height: auto;
-        max-width: 100%;
-        padding: 1rem;
-        box-sizing: border-box;
-        overflow: hidden;
-    }
+        @media screen and (max-width: 768px) {
+            .poster-container {
+                width: min(95vw, 650px);
+                height: min(95vh, 850px);
+                max-width: 90%;
+                max-height: 90%;
+            }
+            
+            .countdown-overlay {
+                margin-bottom: 110px;
+                margin-left: 220px;
+                transform: scale(0.9);
+            }
+            
+            .countdown-line {
+                width: clamp(280px, 80%, 450px);
+                gap: clamp(6px, 1.8vw, 12px);
+                top: 37.8%;
+            }
+            
+            .time-unit {
+                max-width: clamp(50px, 12vw, 75px);
+                min-width: clamp(40px, 10vw, 60px);
+                padding: clamp(6px, 1.5vw, 10px) clamp(4px, 1vw, 8px);
+            }
+            
+            .time-number {
+                font-size: clamp(1rem, 2.8vw, 1.6rem);
+            }
+            
+            .time-label {
+                font-size: clamp(0.4rem, 1vw, 0.65rem);
+            }
+            
+            .time-separator {
+                font-size: clamp(0.8rem, 2vw, 1.2rem);
+            }
+        }
 
-    .countdown-overlay {
-        margin-bottom: 40px;
-        margin-left: 0;
-        transform: scale(1);
-        width: 100%;
-        text-align: center;
-    }
-
-    .countdown-line {
-        width: clamp(280px, 90vw, 450px);
-        gap: clamp(6px, 2vw, 12px);
-        top: 38%;
-        left: 50%;
-        transform: translateX(-50%);
-        position: relative;
-    }
-
-    .time-unit {
-        max-width: clamp(50px, 20vw, 75px);
-        min-width: clamp(40px, 15vw, 60px);
-        padding: clamp(6px, 2vw, 10px) clamp(4px, 2vw, 8px);
-    }
-
-    .time-number {
-        font-size: clamp(1.2rem, 5vw, 1.6rem);
-    }
-
-    .time-label {
-        font-size: clamp(0.6rem, 3vw, 0.9rem);
-    }
-
-    .time-separator {
-        font-size: clamp(0.9rem, 3vw, 1.2rem);
-    }
-}
-
-/* Very small devices (adjustments only when absolutely necessary) */
-@media screen and (max-width: 360px) {
-    .countdown-overlay {
-        transform: scale(1);
-        margin-bottom: 20px;
-    }
-
-    .poster-container {
-        padding: 0.5rem;
-    }
-}
+        /* Very small devices (adjustments only when absolutely necessary) */
+        @media screen and (max-width: 360px) {
+            .countdown-overlay {
+                transform: scale(0.9);
+            }
+        }
 
         /* Landscape orientation */
         @media screen and (orientation: landscape) and (max-height: 500px) {
