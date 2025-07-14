@@ -301,14 +301,14 @@
             .poster-container {
                 width: min(95vw, 650px);
                 height: min(95vh, 850px);
-                max-width: 90%;
-                max-height: 90%;
+                max-width: 100%;
+                max-height: 100%;
             }
             
             .countdown-overlay {
                 margin-bottom: 110px;
                 margin-left: 220px;
-                transform: scale(0.9);
+                transform: scale(0.8);
             }
             
             .countdown-line {
@@ -338,8 +338,20 @@
 
         /* Very small devices (adjustments only when absolutely necessary) */
         @media screen and (max-width: 360px) {
-            .countdown-overlay {
+            /* .countdown-overlay {
                 transform: scale(0.9);
+            } */
+            .poster-container {
+                width: min(95vw, 650px);
+                height: min(95vh, 850px);
+                max-width: 90%;
+                max-height: 90%;
+            }
+            
+            .countdown-overlay {
+                margin-bottom: 110px;
+                margin-left: 220px;
+                transform: scale(0.8);
             }
         }
 
